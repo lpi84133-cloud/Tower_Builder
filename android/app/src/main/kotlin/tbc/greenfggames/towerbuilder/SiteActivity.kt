@@ -1,4 +1,4 @@
-package com.surgefort.towersurgegame
+package tbc.greenfggames.towerbuilder
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,16 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../app/asset_paths.dart';
-import '../../app/brand.dart';
-import '../../app/palette.dart';
 import '../../app/routes.dart';
-import '../../app/type_scale.dart';
 import '../../build_site/sprite_bank.dart';
 import '../../state/audio_desk.dart';
-import '../widgets/blueprint_backdrop.dart';
 
-/// Warms the sprite cache while the wordmark settles, then hands off to the yard.
 class BootScreen extends StatefulWidget {
   const BootScreen({super.key});
 
@@ -20,15 +17,30 @@ class BootScreen extends StatefulWidget {
 
 class _BootScreenState extends State<BootScreen>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _intro = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 900),
-  )..forward();
+  double _progress = 0.0;
+  Timer? _ticker;
 
   @override
   void initState() {
     super.initState();
+    _startFakeProgress();
     _prepare();
+  }
+
+  // Animates the bar from 0 → 90 % while real loading happens, then jumps to
+  // 100 % when _prepare() finishes and we navigate away.
+  void _startFakeProgress() {
+    const interval = Duration(milliseconds: 40);
+    _ticker = Timer.periodic(interval, (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      setState(() {
+        // Ease towards 90 %; never reaches 100 % on its own.
+        _progress += (0.90 - _progress) * 0.04;
+      });
+    });
   }
 
   Future<void> _prepare() async {
@@ -36,21 +48,22 @@ class _BootScreenState extends State<BootScreen>
     await SpriteBank.shared.warmUp();
     if (!mounted) return;
 
-    // The plate is the only sprite drawn through the widget tree rather than the
-    // painter, so it needs the image cache warmed separately — otherwise the
-    // site's main action shows up a frame late.
     await precacheImage(const AssetImage(Art.plateBlank), context);
     if (!mounted) return;
 
-    // Hold the splash for a beat even on a fast device so the handoff is not a
-    // single-frame flash.
     final elapsed = DateTime.now().difference(started);
-    const minimum = Duration(milliseconds: 1100);
+    const minimum = Duration(milliseconds: 1400);
     if (elapsed < minimum) {
       await Future<void>.delayed(minimum - elapsed);
     }
     if (!mounted) return;
 
+    // Snap to 100 % before navigating so the user sees a full bar.
+    setState(() => _progress = 1.0);
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    if (!mounted) return;
+
+    _ticker?.cancel();
     await context.read<AudioDesk>().playBed(Bed.shell);
     if (!mounted) return;
 
@@ -59,60 +72,113 @@ class _BootScreenState extends State<BootScreen>
 
   @override
   void dispose() {
-    _intro.dispose();
+    _ticker?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final fade = CurvedAnimation(parent: _intro, curve: Curves.easeOut);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final loadingImage =
+        isLandscape ? Art.loadingHorizontal : Art.loadingVertical;
+    final pct = (_progress * 100).round();
 
     return Scaffold(
-      backgroundColor: Hue.navy,
-      body: BlueprintBackdrop(
-        child: SafeArea(
-          child: Column(
-            children: [
-              const Spacer(flex: 3),
-              FadeTransition(
-                opacity: fade,
-                child: ScaleTransition(
-                  scale: Tween(begin: 0.86, end: 1.0).animate(
-                    CurvedAnimation(parent: _intro, curve: Curves.easeOutBack),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 28),
-                    child: Image.asset(Art.wordmark, fit: BoxFit.contain),
+      backgroundColor: Colors.black,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(loadingImage, fit: BoxFit.cover),
+          SafeArea(
+            child: Column(
+              children: [
+                const Spacer(),
+                const Text(
+                  'Loading.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(blurRadius: 8, color: Colors.black54),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              FadeTransition(
-                opacity: fade,
-                child: Text(Brand.tagline,
-                    style: Type.body(size: 13, color: Hue.chalkDim)),
-              ),
-              const Spacer(flex: 2),
-              const SizedBox(
-                width: 132,
-                child: LinearProgressIndicator(
-                  minHeight: 3,
-                  backgroundColor: Hue.slate,
-                  valueColor: AlwaysStoppedAnimation(Hue.cyan),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: _FancyBar(progress: _progress),
                 ),
-              ),
-              const SizedBox(height: 14),
-              Text('Preparing the site\u2026', style: Type.eyebrow(size: 10)),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 14),
-                child: Text(
-                    '${Brand.studio} \u00B7 ${Brand.minimumAge}+ \u00B7 '
-                    'simulation only',
-                    style: Type.body(size: 11, color: Hue.chalkDim)),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  '$pct%',
+                  style: const TextStyle(
+                    color: Color(0xFF4FC3F7),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    shadows: [Shadow(blurRadius: 6, color: Colors.black)],
+                  ),
+                ),
+                const SizedBox(height: 36),
+              ],
+            ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FancyBar extends StatelessWidget {
+  const _FancyBar({required this.progress});
+
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 22,
+      decoration: BoxDecoration(
+        color: Colors.black38,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white24, width: 1),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(11),
+        child: Stack(
+          children: [
+            // Filled portion
+            FractionallySizedBox(
+              widthFactor: progress.clamp(0.0, 1.0),
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF0288D1),
+                      Color(0xFF4FC3F7),
+                      Color(0xFF81D4FA),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Shine overlay
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withOpacity(0.25),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

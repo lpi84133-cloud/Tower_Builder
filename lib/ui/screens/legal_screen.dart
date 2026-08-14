@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../app/brand.dart';
-import '../../app/palette.dart';
-import '../../app/type_scale.dart';
-import '../widgets/blueprint_backdrop.dart';
 
 /// Which text to show.
 enum LegalDoc { privacy, terms, responsible }
 
-/// Legal texts, rendered from strings compiled into the app.
-///
-/// They deliberately do not load a remote page: the app makes no network requests
-/// at all, so the policy has to be readable offline, from the first launch. The
-/// store listing hosts the same text for reviewers who need a URL.
+/// Legal texts embedded in the app — readable offline from the first launch.
 class LegalScreen extends StatelessWidget {
   const LegalScreen({super.key, required this.doc});
 
@@ -22,11 +14,11 @@ class LegalScreen extends StatelessWidget {
   String get _title {
     switch (doc) {
       case LegalDoc.privacy:
-        return 'Privacy policy';
+        return 'Privacy Policy';
       case LegalDoc.terms:
-        return 'Terms of use';
+        return 'Terms of Use';
       case LegalDoc.responsible:
-        return 'Playing responsibly';
+        return 'Playing Responsibly';
     }
   }
 
@@ -43,72 +35,54 @@ class LegalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const bodyStyle = TextStyle(
+      fontSize: 14,
+      height: 1.55,
+      color: Colors.black87,
+    );
+    const headingStyle = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    );
+    const dividerColor = Color(0xFFDDDDDD);
+
     return Scaffold(
-      backgroundColor: Hue.navy,
-      body: BlueprintBackdrop(
-        glow: false,
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 8, 16, 4),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => Navigator.of(context).maybePop(),
-                      icon: const Icon(Icons.chevron_left_rounded,
-                          color: Hue.chalk, size: 28),
-                    ),
-                    Expanded(child: Text(_title, style: Type.label(size: 17))),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 28),
-                  children: [
-                    Text('${Brand.title} \u00B7 ${Brand.studio}',
-                        style: Type.eyebrow()),
-                    const SizedBox(height: 16),
-                    for (final block in _blocks) ...[
-                      if (block.heading != null) ...[
-                        Text(block.heading!, style: Type.label(size: 14)),
-                        const SizedBox(height: 6),
-                      ],
-                      Text(block.body, style: Type.body(size: 13, height: 1.45)),
-                      const SizedBox(height: 16),
-                    ],
-                    const Divider(color: Hue.cardEdge),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('Questions: ${Brand.supportEmail}',
-                              style: Type.body(size: 12)),
-                        ),
-                        IconButton(
-                          tooltip: 'Copy address',
-                          onPressed: () async {
-                            await Clipboard.setData(
-                                const ClipboardData(text: Brand.supportEmail));
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: Hue.slate,
-                              content: Text('Address copied',
-                                  style: Type.body(size: 12)),
-                            ));
-                          },
-                          icon: const Icon(Icons.copy_rounded,
-                              size: 16, color: Hue.cyan),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        title: Text(_title,
+            style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: Colors.black)),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).maybePop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: Colors.black, size: 20),
         ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 40),
+        children: [
+          for (final block in _blocks) ...[
+            if (block.heading != null) ...[
+              const SizedBox(height: 20),
+              Text(block.heading!, style: headingStyle),
+              const SizedBox(height: 6),
+            ],
+            Text(block.body, style: bodyStyle),
+          ],
+          const SizedBox(height: 24),
+          const Divider(color: dividerColor),
+          const SizedBox(height: 8),
+          Text(
+            '${Brand.title} \u00B7 ${Brand.studio}',
+            style: const TextStyle(fontSize: 12, color: Colors.black54),
+          ),
+        ],
       ),
     );
   }
@@ -122,45 +96,86 @@ class _Block {
 
 const _privacy = <_Block>[
   _Block(
-    'The short version',
-    '${Brand.title} does not collect, transmit or sell any personal data. There '
-        'are no accounts, no sign-in, no advertising, no analytics and no '
-        'tracking of any kind. The game does not talk to a server.',
+    null,
+    'Effective Date: August 2026\n\n'
+        'Developer (\u201Cwe\u201D, \u201Cus\u201D, or \u201Cour\u201D) operates the ${Brand.title} mobile '
+        'application (\u201CService\u201D). This Privacy Policy explains how information '
+        'is collected, used, and protected when you use the Service.',
   ),
   _Block(
-    'What is stored, and where',
-    'Your balance, career rank, unlocked cosmetics, daily check-in streak, '
-        'contracts, weekly standings and audio preferences are written to the '
-        'app\u2019s private storage on this device only. Nothing is uploaded, '
-        'backed up to us, or shared with a third party.',
+    'Information We Collect',
+    'The Service may collect limited technical information necessary for '
+        'operation and improvement of the application, including:\n\n'
+        '\u2022 Device type and model\n'
+        '\u2022 Operating system version\n'
+        '\u2022 Anonymous usage statistics\n'
+        '\u2022 Diagnostic and crash information\n'
+        '\u2022 IP address (when required for security and analytics purposes)\n\n'
+        'We do not intentionally collect sensitive personal information such as '
+        'financial account details, government-issued identification numbers, or '
+        'biometric data.',
   ),
   _Block(
-    'Permissions',
-    'The app requests no runtime permissions. It does not read your contacts, '
-        'files, location, camera, microphone, advertising identifier or device '
-        'identifiers.',
+    'How We Use Information',
+    '\u2022 Provide and maintain the Service\n'
+        '\u2022 Improve app functionality and user experience\n'
+        '\u2022 Monitor application performance and stability\n'
+        '\u2022 Detect, prevent, and resolve technical issues\n'
+        '\u2022 Comply with legal obligations',
   ),
   _Block(
-    'Third-party components',
-    'The build includes open-source Flutter packages for local storage and '
-        'audio playback only. Neither collects data, and the app declares no '
-        'network permission at all.',
+    'Data Storage and Security',
+    'We take reasonable measures to protect information from unauthorized '
+        'access, alteration, disclosure, or destruction. However, no method of '
+        'electronic transmission or storage is completely secure.',
   ),
   _Block(
-    'Children',
-    '${Brand.title} is intended for players aged ${Brand.minimumAge} and over '
-        'and is not directed at children. It contains no purchases and no data '
-        'collection of any kind.',
+    'Third-Party Services',
+    'The Service may use third-party providers for analytics, crash reporting, '
+        'hosting, or other operational purposes. These providers may process '
+        'information solely to provide services on our behalf.',
   ),
   _Block(
-    'Deleting your data',
-    'Open Options and use "Erase progress" to wipe the save immediately. '
-        'Uninstalling the app also removes everything it stored.',
+    'Data Retention',
+    'We retain information only for as long as necessary to provide the '
+        'Service, comply with legal obligations, resolve disputes, and enforce '
+        'agreements.',
   ),
   _Block(
-    'Changes',
-    'If this policy ever changes, the updated text ships inside the app update '
-        'itself, so what you read here always matches the version you are running.',
+    'Data Deletion',
+    'Users have the right to request deletion of their personal data.\n\n'
+        'To request deletion of data associated with ${Brand.title}, please '
+        'contact us at:\n\nEmail: support@towerbuilder.com\n\n'
+        'When submitting a deletion request, please provide sufficient '
+        'information to identify your account or device. Verified requests will '
+        'be processed within a reasonable timeframe.\n\n'
+        'If the application stores data only on the user\u2019s device, users may '
+        'permanently delete all stored data by uninstalling the application and '
+        'clearing the application\u2019s local storage.',
+  ),
+  _Block(
+    'Your Rights',
+    'Depending on your location, you may have rights regarding access, '
+        'correction, deletion, restriction, or portability of your personal data '
+        'under applicable privacy laws, including the GDPR.',
+  ),
+  _Block(
+    'Children\u2019s Privacy',
+    'The Service is not intended for children under the age of 18, and we do '
+        'not knowingly collect personal information from children.',
+  ),
+  _Block(
+    'Changes to This Privacy Policy',
+    'We may update this Privacy Policy from time to time. Changes become '
+        'effective when posted on this page. Users are encouraged to review this '
+        'policy periodically.',
+  ),
+  _Block(
+    'Contact Us',
+    'If you have questions about this Privacy Policy or wish to exercise your '
+        'privacy rights, please contact:\n\n'
+        'Developer: ${Brand.title}\n'
+        'Email: support@towerbuilder.com',
   ),
 ];
 

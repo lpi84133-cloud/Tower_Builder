@@ -26,6 +26,10 @@ class Art {
   // Shell
   static const wordmark = '$_shell/wordmark.webp';
 
+  // Loading screens
+  static const loadingVertical = 'assets/Vertical_Loading_Screen.webp';
+  static const loadingHorizontal = 'assets/Horizontal_Loading_Screen.webp';
+
   /// Warning-tape plate behind the site's primary action. Carries no lettering,
   /// so it can be stretched to any width and captioned in code.
   static const plateBlank = '$_shell/plate_blank.webp';

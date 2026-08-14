@@ -18,7 +18,7 @@ val hasUploadKey = keystoreProperties.getProperty("storeFile")?.let {
 } ?: false
 
 android {
-    namespace = "com.surgefort.towersurgegame"
+    namespace = "tbc.greenfggames.towerbuilder"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -28,7 +28,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.surgefort.towersurgegame"
+        applicationId = "tbc.greenfggames.towerbuilder"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

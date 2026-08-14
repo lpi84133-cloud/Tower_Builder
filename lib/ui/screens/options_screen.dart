@@ -217,7 +217,7 @@ class OptionsScreen extends StatelessWidget {
                           Text('${Brand.title}  v${Brand.version}',
                               style: Type.label(size: 12)),
                           const SizedBox(height: 4),
-                          Text('${Brand.studio} \u00B7 ${Brand.supportEmail}',
+                          Text(Brand.studio,
                               style: Type.body(size: 11)),
                           const SizedBox(height: 4),
                           Text('Fonts under the SIL Open Font License',

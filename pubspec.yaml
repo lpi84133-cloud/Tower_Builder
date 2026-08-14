@@ -27,6 +27,8 @@ flutter:
     - assets/art/site/
     - assets/art/shell/
     - assets/audio/
+    - assets/Vertical_Loading_Screen.webp
+    - assets/Horizontal_Loading_Screen.webp
 
   fonts:
     - family: SiteDisplay
@@ -50,7 +52,7 @@ flutter_launcher_icons:
   ios: true
   image_path: tool/branding/launcher.png
   adaptive_icon_background: tool/branding/launcher_bg.png
-  adaptive_icon_foreground: tool/branding/launcher_fg.png
+  adaptive_icon_foreground: tool/branding/launcher.png
   remove_alpha_ios: true
 
 flutter_native_splash:
