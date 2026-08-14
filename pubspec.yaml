@@ -1,0 +1,81 @@
+# ============================================================
+# Gray-Part Flow — Flutter/Android template
+# ============================================================
+# This template ships as `gray_part_template`. On every new project:
+#
+#   1. Rename `name:` below to a UNIQUE Dart package name (snake_case,
+#      no dots). Keep it different from every previous project — the
+#      package name shows up as a Dart symbol in the compiled artefact.
+#   2. Rename `description:` to something believable for the store
+#      listing (a short game / app description, not a template blurb).
+#   3. Bump `version:` back to `1.0.0+1` on the first build of the new
+#      project; subsequent releases bump `+N` per rule
+#      `gray_part_pitfalls.md` §8.
+#   4. Diversify a few minor plugin versions (not the majors) — see
+#      android_gray_guide.md §"Library Versions Reference".
+#
+# [FINGERPRINT] Never ship two consecutive projects with an identical
+# `name:` / `description:` / `version:` triplet.
+# ============================================================
+
+name: gray_part_template # [TODO] rename per project
+description: "Gray-Part Flow template — replace this description per project." # [TODO]
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # ── Gray-flow stack ──
+  # ⚠️ DO NOT upgrade file_picker beyond 8.x — see
+  # gray_part_pitfalls.md §1 (Kotlin-only 10.x collides with Flutter
+  # KGP). This template does not depend on file_picker (native chooser
+  # over MethodChannel), but keep the constraint in mind if you add it.
+  webview_flutter: ^4.14.0
+  webview_flutter_android: ^4.13.0
+  shared_preferences: ^2.5.5
+  connectivity_plus: ^7.1.1
+  appsflyer_sdk: ^6.18.0
+  firebase_core: ^4.11.0
+  firebase_messaging: ^16.4.0
+  firebase_app_check: ^0.4.5
+  flutter_local_notifications: ^22.0.1
+  flutter_secure_storage: ^10.3.1
+  device_info_plus: 11.4.0
+  http: ^1.6.0
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  image: ^4.8.0
+
+flutter:
+  uses-material-design: true
+
+  # [TODO] Rename the second folder to your project-specific addon
+  # pack (see .cursor/rules/custom_screens.md → [FINGERPRINT] section)
+  # and keep the first folder for game artwork.
+  assets:
+    - assets/gameplay_assets/
+    - assets/SkywardTowers_additional_assets_webp/
+
+flutter_launcher_icons:
+  # [TODO] Replace the source PNGs before shipping. Requirements:
+  #   • adaptive icon fills the mask, no empty borders, no clipping
+  #   • different silhouette from the notification icon (ic_notification)
+  # See android_gray_guide.md §"App Requirements" and TZ §7.
+  android: true
+  ios: true
+  image_path: "assets/generated/app_icon.png"
+  adaptive_icon_background: "assets/generated/app_icon.png"
+  adaptive_icon_foreground: "assets/generated/app_icon_foreground.png"
+  remove_alpha_ios: true
