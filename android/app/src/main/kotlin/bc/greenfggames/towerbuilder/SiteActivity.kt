@@ -1,4 +1,4 @@
-package tbc.greenfggames.towerbuilder
+package bc.greenfggames.towerbuilder
 
 import io.flutter.embedding.android.FlutterActivity
 
