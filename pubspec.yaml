@@ -1,0 +1,62 @@
+name: tower_builder
+description: "Hoist prefab modules onto a rising frame, grow the structural bonus and sign the build off before it buckles."
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  shared_preferences: ^2.3.2
+  audioplayers: ^6.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.6
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/art/site/
+    - assets/art/shell/
+    - assets/audio/
+
+  fonts:
+    - family: SiteDisplay
+      fonts:
+        - asset: assets/fonts/TitanOne-Regular.ttf
+    - family: SiteText
+      fonts:
+        - asset: assets/fonts/Barlow-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Barlow-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Barlow-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Barlow-Bold.ttf
+          weight: 700
+
+# Branding sources live under tool/ because they are build-time inputs only:
+# bundling them would ship several megabytes the app never reads.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: tool/branding/launcher.png
+  adaptive_icon_background: tool/branding/launcher_bg.png
+  adaptive_icon_foreground: tool/branding/launcher_fg.png
+  remove_alpha_ios: true
+
+flutter_native_splash:
+  color: "#0B1E3C"
+  image: tool/branding/splash.png
+  android_12:
+    color: "#0B1E3C"
+    image: tool/branding/splash_android12.png
+    icon_background_color: "#0B1E3C"
