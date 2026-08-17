@@ -1,7 +1,7 @@
 name: tower_builder
 description: "Hoist prefab modules onto a rising frame, grow the structural bonus and sign the build off before it buckles."
 publish_to: "none"
-version: 1.0.0+1
+version: 1.0.0+4
 
 environment:
   sdk: ^3.5.0
