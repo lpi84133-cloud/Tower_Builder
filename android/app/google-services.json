@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "306020165091",
-    "project_id": "tower-surge-9f988",
-    "storage_bucket": "tower-surge-9f988.firebasestorage.app"
+    "project_number": "621888781221",
+    "project_id": "tower-builder-a44d1",
+    "storage_bucket": "tower-builder-a44d1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:306020165091:android:b9a998305c8e60c5f56cd6",
+        "mobilesdk_app_id": "1:621888781221:android:d2716d748aca745fc2c64c",
         "android_client_info": {
-          "package_name": "com.surgefort.towersurgegame"
+          "package_name": "bc.greenfggames.towerbuilder"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAU_UpMctSMQxqmxYUwI1oekimvjOKjfoo"
+          "current_key": "AIzaSyANmteZAfGzLFtQdFYjx5Fb6VibmHQTU2A"
         }
       ],
       "services": {

@@ -11,7 +11,11 @@ import '../ui/screens/run_screen.dart';
 class Routes {
   const Routes._();
 
-  static const boot = '/';
+  /// Local warm-up screen that decodes sprites and precaches the site
+  /// artwork before the yard mounts. Reached via `pushReplacementNamed`
+  /// from the top-level shell router once it has chosen the native
+  /// (yard) branch.
+  static const kickoff = '/kickoff';
   static const home = '/yard';
   static const run = '/site';
   static const options = '/options';
@@ -19,6 +23,8 @@ class Routes {
 
   static Route<dynamic> generate(RouteSettings settings) {
     switch (settings.name) {
+      case kickoff:
+        return _lift(const BootScreen(), settings);
       case home:
         return _lift(const HomeShell(), settings);
       case run:
@@ -30,7 +36,6 @@ class Routes {
             ? settings.arguments as LegalDoc
             : LegalDoc.privacy;
         return _lift(LegalScreen(doc: doc), settings);
-      case boot:
       default:
         return _lift(const BootScreen(), settings);
     }

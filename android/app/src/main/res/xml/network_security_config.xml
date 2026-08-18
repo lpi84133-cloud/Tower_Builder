@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--
+        Base policy: cleartext OFF. HTTPS everywhere by default.
+        The site-portal talks to `towerbuillder.com` over TLS only.
+    -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+
+    <!--
+        Per-domain HTTP whitelist. Only the partner test / staging
+        push hosts are allowed to serve over cleartext, per
+        `.cursor/rules/gray_part_pitfalls.md` §17. Never turn this
+        into a blanket allow — an audit review flags that instantly.
+        If a manager ships an HTTP push URL from another domain,
+        first ask them for HTTPS; only if that's impossible add the
+        new host as a NEW <domain-config>.
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">afsub.com</domain>
+        <domain includeSubdomains="true">team-s.club</domain>
+    </domain-config>
+</network-security-config>

@@ -23,7 +23,7 @@ import '../../state/architect.dart';
 import '../../state/audio_desk.dart';
 import '../../state/contract_board.dart';
 import '../../state/rival_firms.dart';
-import '../widgets/budget_bar.dart';
+import '../widgets/budget_dial.dart';
 import '../widgets/gloss_button.dart';
 import '../widgets/hazard_trim.dart';
 import '../widgets/payout_sheet.dart';
@@ -514,7 +514,7 @@ class _Controls extends StatelessWidget {
                   ? [
                       RiskSelector(selected: tier, onSelect: onTier, dense: true),
                       const SizedBox(height: 9),
-                      BudgetBar(
+                      BudgetDial(
                         budget: budget,
                         balance: balance,
                         onChanged: onBudget,

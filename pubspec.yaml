@@ -1,7 +1,7 @@
 name: tower_builder
 description: "Hoist prefab modules onto a rising frame, grow the structural bonus and sign the build off before it buckles."
 publish_to: "none"
-version: 1.0.0+4
+version: 1.0.1+3
 
 environment:
   sdk: ^3.5.0
@@ -10,12 +10,27 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.2
-  shared_preferences: ^2.3.2
+  shared_preferences: ^2.5.1
   audioplayers: ^6.1.0
+
+  # ── Site-portal stack ──
+  webview_flutter: ^4.13.0
+  webview_flutter_android: ^4.12.0
+  connectivity_plus: ^7.0.0
+  appsflyer_sdk: ^6.17.0
+  firebase_core: ^4.9.0
+  firebase_messaging: ^16.2.0
+  firebase_app_check: ^0.4.4
+  flutter_local_notifications: ^22.0.0
+  flutter_secure_storage: ^11.0.0
+  device_info_plus: ^13.2.0
+  http: ^1.5.0
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  custom_lint: ^0.7.5
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.6
@@ -27,8 +42,7 @@ flutter:
     - assets/art/site/
     - assets/art/shell/
     - assets/audio/
-    - assets/Vertical_Loading_Screen.webp
-    - assets/Horizontal_Loading_Screen.webp
+    - assets/Tower_Builder_assets/
 
   fonts:
     - family: SiteDisplay
@@ -45,14 +59,16 @@ flutter:
         - asset: assets/fonts/Barlow-Bold.ttf
           weight: 700
 
-# Branding sources live under tool/ because they are build-time inputs only:
-# bundling them would ship several megabytes the app never reads.
+# Launcher icon comes from the site-portal asset pack so the store
+# artwork matches what the WebView boots into. Adaptive background is a
+# flat navy so the round mask keeps the seal fully visible on every
+# device — foreground shares the same PNG, cropped by the mask.
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: tool/branding/launcher.png
-  adaptive_icon_background: tool/branding/launcher_bg.png
-  adaptive_icon_foreground: tool/branding/launcher.png
+  image_path: assets/Tower_Builder_assets/brix_seal.png
+  adaptive_icon_background: "#0B1E3C"
+  adaptive_icon_foreground: assets/Tower_Builder_assets/brix_seal.png
   remove_alpha_ios: true
 
 flutter_native_splash:
