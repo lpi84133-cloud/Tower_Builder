@@ -115,8 +115,7 @@ class BeaconLink {
               jsonDecode(payload) as Map<String, dynamic>;
           final String? link = _pickLink(data);
           if (link == null) return;
-          _box.stashPendingLink(link);
-          onLink?.call(link);
+          _dispatch(link);
         } catch (_) {}
       },
     );
@@ -235,11 +234,28 @@ class BeaconLink {
     }
     final String? link = _pickLink(data);
     if (link == null || link.isEmpty) return;
-    // Stash-and-live-hand-off: onLink loads the URL in the open
-    // WebShell when there is one; the pending stash catches the case
-    // where the tap arrives during router boot / on the outage screen.
-    _box.stashPendingLink(link);
-    onLink?.call(link);
+    _dispatch(link);
+  }
+
+  /// Route a live-tap URL either to the open WebShell (when it registered
+  /// an `onLink` receiver) or to the pending-stash for the router to
+  /// consume on its next drive.
+  ///
+  /// The two branches are MUTUALLY EXCLUSIVE on purpose: writing the URL
+  /// to the stash while a WebShell is already showing means a force-close
+  /// leaves the URL dangling. The next cold start would then hand that
+  /// stale URL to `takePendingLink()` and open the pushed page again,
+  /// even though the user just wanted the base link.
+  void _dispatch(String link) {
+    final void Function(String)? live = onLink;
+    if (live != null) {
+      live(link);
+      // Clear any leftover stash from before the WebShell was live —
+      // the receiver has taken over, no need to persist across kill.
+      _box.stashPendingLink(null);
+    } else {
+      _box.stashPendingLink(link);
+    }
   }
 
   Future<Uint8List?> _fetchImage(String url) async {

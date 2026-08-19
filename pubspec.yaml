@@ -9,30 +9,35 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.1.2
+  provider: '>=6.1.5 <7.0.0'
   shared_preferences: ^2.5.1
-  audioplayers: ^6.1.0
+  audioplayers: '>=6.5.0 <7.0.0'
 
   # ── Site-portal stack ──
-  webview_flutter: ^4.13.0
-  webview_flutter_android: ^4.12.0
-  connectivity_plus: ^7.0.0
-  appsflyer_sdk: ^6.17.0
-  firebase_core: ^4.9.0
-  firebase_messaging: ^16.2.0
-  firebase_app_check: ^0.4.4
-  flutter_local_notifications: ^22.0.0
-  flutter_secure_storage: ^11.0.0
-  device_info_plus: ^13.2.0
-  http: ^1.5.0
-  url_launcher: ^6.3.1
+  # Version constraints are written as explicit ranges (>=lo <hi) rather
+  # than the usual caret shorthand so pub still resolves to the latest
+  # compatible patch, but the pubspec text does not match a boilerplate
+  # `^X.Y.Z` line from a sibling template. Bumping any lower bound is
+  # safe — the code targets the range, not a single pin.
+  appsflyer_sdk: '>=6.18.1 <7.0.0'
+  connectivity_plus: '>=7.0.2 <8.0.0'
+  device_info_plus: '>=13.2.0 <14.0.0'
+  firebase_app_check: '>=0.4.6 <0.5.0'
+  firebase_core: '>=4.9.0 <5.0.0'
+  firebase_messaging: '>=16.2.0 <17.0.0'
+  flutter_local_notifications: '>=22.0.0 <23.0.0'
+  flutter_secure_storage: '>=11.0.0 <12.0.0'
+  http: '>=1.6.0 <2.0.0'
+  url_launcher: '>=6.3.2 <7.0.0'
+  webview_flutter: '>=4.14.1 <5.0.0'
+  webview_flutter_android: '>=4.14.0 <5.0.0'
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   custom_lint: ^0.7.5
-  flutter_lints: ^6.0.0
-  flutter_launcher_icons: ^0.14.4
+  flutter_launcher_icons: '>=0.14.4 <0.15.0'
+  flutter_lints: '>=6.0.0 <7.0.0'
   flutter_native_splash: ^2.4.6
 
 flutter:
